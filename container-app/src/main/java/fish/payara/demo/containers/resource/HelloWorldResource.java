@@ -30,7 +30,6 @@ public class HelloWorldResource {
 
     @GET
     public Response hello(@QueryParam("name") String name, @HeaderParam("Upstream-ID") String upstreamId) {
-        String hostname = getHostname();
         var response = new StringBuilder();
         response.append("Hello, ");
         if ((name == null) || name.trim().isEmpty()) {
@@ -43,6 +42,7 @@ public class HelloWorldResource {
             if (upstreamId != null) {
                 response.append("\nWill not make downstream call, this one already arrived from ")
                         .append(upstreamId);
+                return;
             }
             var client = ClientBuilder.newClient().target(downstreamUri);
             var downstreamResponse = client.request(MediaType.TEXT_PLAIN)
