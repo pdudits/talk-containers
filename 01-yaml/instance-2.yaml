@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demonstration
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: second-instance-config
+  namespace: demonstration
+data:
+  application.properties: |
+    hello.defaultName=secondInstance
+    hello.downstreamUri=http://first-instance/hello
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-instance
+  namespace: demonstration
+  labels:
+    app: second-instance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-instance
+  template:
+    metadata:
+      labels:
+        app: second-instance
+    spec:
+      containers:
+        - name: container-app
+          image: pdudits/container-talk-demo:latest
+          imagePullPolicy: Always
+          args:
+            ["--deploymentDir", "/opt/payara/deployments", "--contextRoot", "/", "--systemProperties", "/config/application.properties"]
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: second-instance-config
+            items:
+              - key: application.properties
+                path: application.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: second-instance
+  namespace: demonstration
+  labels:
+    app: second-instance
+spec:
+  type: ClusterIP
+  selector:
+    app: second-instance
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: second-instance
+  namespace: demonstration
+  labels:
+    app: second-instance
+spec:
+  ingressClassName: traefik-cloud-head
+  rules:
+    - host: second-instance-conference.payara.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: second-instance
+                port:
+                  name: http
