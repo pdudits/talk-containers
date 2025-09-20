@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demonstration
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: first-instance-config
+  namespace: demonstration
+data:
+  application.properties: |
+    hello.defaultName=firstInstance
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-instance
+  namespace: demonstration
+  labels:
+    app: first-instance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: first-instance
+  template:
+    metadata:
+      labels:
+        app: first-instance
+    spec:
+      containers:
+        - name: container-app
+          image: pdudits/container-talk-demo:latest
+          imagePullPolicy: Always
+          args:
+            ["--deploymentDir", "/opt/payara/deployments", "--contextRoot", "/", "--systemProperties", "/config/application.properties"]
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /config/application.properties
+              subPath: application.properties
+      volumes:
+        - name: config
+          configMap:
+            name: first-instance-config
+            items:
+              - key: application.properties
+                path: application.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-instance
+  namespace: demonstration
+  labels:
+    app: first-instance
+spec:
+  type: ClusterIP
+  selector:
+    app: first-instance
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: first-instance
+  namespace: demonstration
+  labels:
+    app: first-instance
+spec:
+  ingressClassName: traefik-cloud-head
+  rules:
+    - host: first-instance-conference.payara.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: first-instance
+                port:
+                  number: 8080

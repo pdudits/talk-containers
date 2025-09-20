@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fish.payara.demo</groupId>
+    <artifactId>container-app</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>container-app</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <jakartaee-api.version>10.0.0</jakartaee-api.version>
+        <payara.version>6.2025.9</payara.version>
+        <docker.platforms>linux/amd64,linux/arm64</docker.platforms>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>fish.payara.api</groupId>
+                <artifactId>payara-bom</artifactId>
+                <version>${payara.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <scope>provided</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>fish.payara.api</groupId>
+            <artifactId>payara-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!-- Execute 'mvn clean package payara-micro:dev' to run the application. -->
+            <plugin>
+                <groupId>fish.payara.maven.plugins</groupId>
+                <artifactId>payara-micro-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <payaraVersion>${payara.version}</payaraVersion>
+                    <deployWar>true</deployWar>
+                    <commandLineOptions>
+                        <option>
+                            <key>--autoBindHttp</key>
+                        </option>
+                        <option>
+                            <key>
+                                --nohazelcast
+                            </key>
+                        </option>
+                        <option>
+                            <key>--rootDir</key>
+                            <value>target/micro</value>
+                        </option>
+                    </commandLineOptions>
+                    <contextRoot>/</contextRoot>
+                </configuration>
+            </plugin>
+            <!-- Execute 'mvn clean package payara-cloud:dev' to run the application in Payara Cloud. -->
+            <plugin>
+                <groupId>fish.payara.maven.plugins</groupId>
+                <artifactId>payara-cloud-maven-plugin</artifactId>
+                <version>1.0-Alpha4</version>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.44.0</version>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>pdudits/container-talk-demo:%l</name>
+                            <build>
+                                <dockerFile>Dockerfile</dockerFile>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <buildx>
+                                    <platforms>
+                                        <platform>${docker.platforms}</platform>
+                                    </platforms>
+                                </buildx>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>payara-nexus-artifacts</id>
+            <url>https://nexus.dev.payara.fish/repository/payara-artifacts</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
+    <profiles>
+    </profiles>
+
+
+</project>
