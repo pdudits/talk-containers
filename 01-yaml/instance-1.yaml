@@ -44,8 +44,7 @@ spec:
               memory: "256Mi"
           volumeMounts:
             - name: config
-              mountPath: /config/application.properties
-              subPath: application.properties
+              mountPath: /config
       volumes:
         - name: config
           configMap:
