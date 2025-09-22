@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  namespace: demonstration
+  labels:
+    app: PLACEHOLDER-NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: PLACEHOLDER-NAME
+  template:
+    metadata:
+      labels:
+        app: PLACEHOLDER-NAME
+    spec:
+      containers:
+        - name: container-app
+          image: pdudits/container-talk-demo:latest
+          imagePullPolicy: Always
+          args:
+            ["--deploymentDir", "/opt/payara/deployments", "--contextRoot", "/", "--systemProperties", "/config/application.properties"]
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: config
+            items:
+              - key: application.properties
+                path: application.properties
+

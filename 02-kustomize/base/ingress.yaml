@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: demonstration
+  labels:
+    app: PLACEHOLDER-NAME
+spec:
+  ingressClassName: traefik-cloud-head
+  rules:
+    - host: PLACEHOLDER-HOST
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: http
+                port:
+                  name: http
+

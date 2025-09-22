@@ -1,0 +1,6 @@
+# this will fail because both instances use same base and same internal IDs.
+# you cannot merge them into single kustomization
+# Components might help, but then you cannot deploy the instances separately
+resources:
+  - ../first-instance
+  - ../second-instance

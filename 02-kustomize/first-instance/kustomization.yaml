@@ -1,0 +1,43 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - ../base
+
+# apply label to all resources, templates and selectors
+namePrefix: first-instance-
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: first-instance
+
+namespace: demonstration
+
+# read config from file
+configMapGenerator:
+  - name: config
+    namespace: demonstration
+    behavior: replace
+    files:
+      - application.properties
+
+# set hostname
+patches:
+  # strategic merge is a little bit more descriptive,
+  # but requires kind, metadata/name
+#  - patch: |-
+#      kind: Ingress
+#      metadata:
+#        name: ingress
+#      spec:
+#        rules:
+#          - host: first-app-conference.payara.app
+#    target:
+#      name: ingress
+    # than JSON patch
+  - target:
+      name: ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: first-app-conference.payara.app

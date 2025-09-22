@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: demonstration
+data:
+  application.properties: |
+    PLACEHOLDER-PROPERTIES
+

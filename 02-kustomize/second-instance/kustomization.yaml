@@ -1,0 +1,29 @@
+resources:
+  - ../base
+
+# apply label to all resources, templates and selectors
+namePrefix: second-instance-
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: second-instance
+
+namespace: demonstration
+
+# read config from file
+configMapGenerator:
+  - name: config
+    namespace: demonstration
+    behavior: replace
+    files:
+      - application.properties
+
+# set hostname
+patches:
+  - target:
+      name: ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: second-app-conference.payara.app
