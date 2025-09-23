@@ -1,0 +1,41 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - ../base
+
+# apply label to all resources, templates and selectors
+namePrefix: third-instance-
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: third-instance
+
+namespace: demonstration
+
+# read config from file
+configMapGenerator:
+  - name: config
+    namespace: demonstration
+    behavior: replace
+    files:
+      - application.properties
+
+# set hostname and context root
+patches:
+  - target:
+      name: ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: first-app-conference.payara.app
+      - op: replace
+        path: /spec/rules/0/http/paths/0/path
+        value: /other
+  - target:
+      name: deployment
+    # context root is 4th argument on in args
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/args/3
+        value: /other
