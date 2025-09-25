@@ -1,0 +1,9 @@
+dependencies:
+- name: container-app
+  repository: file://../container-app/
+  version: 0.1.0
+- name: container-app
+  repository: file://../container-app/
+  version: 0.1.0
+digest: sha256:cb7d3167333827458f857c89daac8bd2c0518d51ddad2802690d95f2ab03d9e3
+generated: "2025-09-25T09:49:58.605479+02:00"

@@ -1,0 +1,22 @@
+first-instance:
+  ingress:
+    hosts:
+      - host: first-instance-conf.payara.app
+        paths:
+          - path: /
+            pathType: Prefix
+
+  config: |-
+    hello.defaultName=firstInstance
+
+second-instance:
+  ingress:
+    hosts:
+      - host: first-instance-conf.payara.app
+        paths:
+          - path: /second
+            pathType: Prefix
+
+  config: |-
+    hello.defaultName=secondInstance
+    hello.downstreamUri=http://combined-first-instance/hello
