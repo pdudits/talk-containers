@@ -5,5 +5,5 @@ metadata:
   labels:
     {{- include "container-app.labels" . | nindent 4 }}
 data:
-  application.properties: |-
-    {{ .Values.config }}
+  application.properties:
+    {{- toYaml .Values.config | indent 6}}
