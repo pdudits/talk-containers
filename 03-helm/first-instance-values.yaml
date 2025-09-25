@@ -1,0 +1,9 @@
+ingress:
+  hosts:
+    - host: first-instance-conf.payara.app
+      paths:
+        - path: /
+          pathType: Prefix
+
+config: |-
+  hello.defaultName=firstInstance
