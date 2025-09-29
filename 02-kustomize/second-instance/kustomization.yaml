@@ -7,9 +7,9 @@ labels:
   - includeSelectors: true
     includeTemplates: true
     pairs:
-      app: second-instance
+      app: second-instance-kustomize
 
-namespace: demonstration
+namespace: demonstration-kustomize
 
 # read config from file
 configMapGenerator:
@@ -26,4 +26,4 @@ patches:
     patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: second-app-conference.payara.app
+        value: container-second-kustomize.payara.app

@@ -1,7 +1,7 @@
 first-instance:
   ingress:
     hosts:
-      - host: first-instance-conf.payara.app
+      - host: containers-combined-helm.payara.app
         paths:
           - path: /
             pathType: Prefix
@@ -12,7 +12,7 @@ first-instance:
 second-instance:
   ingress:
     hosts:
-      - host: first-instance-conf.payara.app
+      - host: containers-combined-helm.payara.app
         paths:
           - path: /second
             pathType: Prefix

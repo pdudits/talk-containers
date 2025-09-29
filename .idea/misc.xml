@@ -5,6 +5,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/container-app/pom.xml" />
+        <option value="$PROJECT_DIR$/04-pulumi/container-app/pom.xml" />
       </list>
     </option>
   </component>

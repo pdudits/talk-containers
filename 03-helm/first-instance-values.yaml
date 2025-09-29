@@ -1,6 +1,6 @@
 ingress:
   hosts:
-    - host: first-instance-conf.payara.app
+    - host: containers-first-helm.payara.app
       paths:
         - path: /
           pathType: Prefix

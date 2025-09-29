@@ -79,7 +79,7 @@ metadata:
 spec:
   ingressClassName: traefik-cloud-head
   rules:
-    - host: first-instance-conference.payara.app
+    - host: container-first-yaml.payara.app
       http:
         paths:
           - path: /
