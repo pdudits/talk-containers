@@ -1,0 +1,123 @@
+# create ingress for all the domains, so that their DNS entries remain alive during demo as I'm deleting the
+# various apps
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demonstration-keepalive
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keepalive-config
+  namespace: demonstration-keepalive
+data:
+  application.properties: |
+    hello.defaultName=KeepAlive
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keepalive
+  namespace: demonstration-keepalive
+  labels:
+    app: keepalive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keepalive
+  template:
+    metadata:
+      labels:
+        app: keepalive
+    spec:
+      containers:
+        - name: container-app
+          image: pdudits/container-talk-demo:latest
+          imagePullPolicy: Always
+          args:
+            ["--deploymentDir", "/opt/payara/deployments", "--contextRoot", "/keepalive", "--systemProperties", "/config/application.properties"]
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: keepalive-config
+            items:
+              - key: application.properties
+                path: application.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keepalive
+  namespace: demonstration-keepalive
+  labels:
+    app: keepalive
+spec:
+  type: ClusterIP
+  selector:
+    app: keepalive
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keepalive
+  namespace: demonstration-keepalive
+  labels:
+    app: keepalive
+spec:
+  ingressClassName: traefik-cloud-head
+  rules:
+    - host: container-first-yaml.payara.app
+      http:
+        paths:
+          - path: /keepalive
+            pathType: Prefix
+            backend:
+              service:
+                name: keepalive
+                port:
+                  name: http
+    - host: container-second-yaml.payara.app
+      http:
+        paths:
+          - path: /keepalive
+            pathType: Prefix
+            backend:
+              service:
+                name: keepalive
+                port:
+                  name: http
+    - host: containers-combined-helm.payara.app
+      http:
+        paths:
+          - path: /keepalive
+            pathType: Prefix
+            backend:
+              service:
+                name: keepalive
+                port:
+                  name: http
+    - host: containers-first-helm.payara.app
+      http:
+        paths:
+          - path: /keepalive
+            pathType: Prefix
+            backend:
+              service:
+                name: keepalive
+                port:
+                  name: http

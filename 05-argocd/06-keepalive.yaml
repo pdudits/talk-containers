@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 06-keepalive
+  namespace: argocd
+spec:
+  destination:
+    namespace: demonstration-keepalive
+    server: https://kubernetes.default.svc
+  project: container-talk
+  source:
+    path: 06-domain-keepalive
+    repoURL: https://github.com/pdudits/talk-containers
+    targetRevision: HEAD
