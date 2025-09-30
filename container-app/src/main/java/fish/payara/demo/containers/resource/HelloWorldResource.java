@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.MediaType;
@@ -29,6 +30,7 @@ public class HelloWorldResource {
     Optional<URI> downstreamUri;
 
     @GET
+    @Produces(MediaType.TEXT_PLAIN)
     public Response hello(@QueryParam("name") String name, @HeaderParam("Upstream-ID") String upstreamId) {
         var response = new StringBuilder();
         response.append("Hello, ");
