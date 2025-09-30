@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 02-kustomize
+  namespace: argocd
+spec:
+  destination:
+    namespace: demonstration-kustomize
+    server: https://kubernetes.default.svc
+  project: container-talk
+  sources:
+    - path: 02-kustomize/first-instance
+      repoURL: https://github.com/pdudits/talk-containers
+      targetRevision: HEAD
+    - path: 02-kustomize/second-instance
+      repoURL: https://github.com/pdudits/talk-containers
+      targetRevision: HEAD
+    - path: 02-kustomize/third-instance
+      repoURL: https://github.com/pdudits/talk-containers
+      targetRevision: HEAD

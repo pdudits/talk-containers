@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: container-talk
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  destinations:
+    - name: '*'
+      namespace: demonstration*
+      server: https://kubernetes.default.svc
+    - name: '*'
+      namespace: demonstration
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://github.com/pdudits/talk-containers

@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 03-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: demonstration-helm
+    server: https://kubernetes.default.svc
+  project: container-talk
+  source:
+    path: 03-helm/combined
+    repoURL: https://github.com/pdudits/talk-containers
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
