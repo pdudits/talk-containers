@@ -1,0 +1,7 @@
+name: container-app-deployment
+description: Deployment for multiple instances of container-app
+runtime: java
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: java
