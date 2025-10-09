@@ -4,7 +4,7 @@ resources:
   - ../base
 
 # apply label to all resources, templates and selectors
-namePrefix: first-instance
+namePrefix: first-instance-
 labels:
   - includeSelectors: true
     includeTemplates: true
