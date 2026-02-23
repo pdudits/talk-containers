@@ -2,7 +2,7 @@
 
 This repository contains sample code for the talk "It (only) starts with containers" which demonstrates various approaches to deploying a Java application in Kubernetes.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/q0_KPLHOnCg?si=x_MxcmKbrcsE5eiz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+Watch the talk on Yoube: https://youtu.be/q0_KPLHOnCg?si=x_MxcmKbrcsE5eiz
 
 **WARNING**: These yaml files are of "works on my cluster" kind. You will need to modify your domain and ingress settings to something that works in your environment.
 
