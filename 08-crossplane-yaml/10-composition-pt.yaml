@@ -2,6 +2,7 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: containerapp-pt
+  namespace: demonstration-crossplane-yaml
 spec:
   compositeTypeRef:
     apiVersion: payara.cloud/v1yaml
