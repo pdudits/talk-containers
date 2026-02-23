@@ -16,3 +16,4 @@ spec:
       server: https://kubernetes.default.svc
   sourceRepos:
     - https://github.com/pdudits/talk-containers
+    - https://charts.crossplane.io/stable
