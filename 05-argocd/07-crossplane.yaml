@@ -8,10 +8,15 @@ spec:
     namespace: demonstration-crossplane
     server: https://kubernetes.default.svc
   project: container-talk
-  source:
-    chart: crossplane
-    repoURL: https://charts.crossplane.io/stable
-    targetRevision: 2.2.0
+  sources:
+    - chart: crossplane
+      repoURL: https://charts.crossplane.io/stable
+      targetRevision: 2.2.0
+      helm:
+        releaseName: crossplane
+    - path: 07-crossplane
+      repoURL: https://github.com/pdudits/talk-containers
+      targetRevision: HEAD
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

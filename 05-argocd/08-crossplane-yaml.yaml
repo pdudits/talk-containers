@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 08-crossplane-yaml
+  namespace: argocd
+spec:
+  destination:
+    namespace: demonstration-crossplane-yaml
+    server: https://kubernetes.default.svc
+  project: container-talk
+  source:
+    path: 08-crossplane-yaml
+    repoURL: https://github.com/pdudits/talk-containers
+    targetRevision: main

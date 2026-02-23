@@ -1,0 +1,171 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: containerapp-pt
+spec:
+  compositeTypeRef:
+    apiVersion: payara.cloud/v1yaml
+    kind: JavaApp
+  mode: Pipeline
+  pipeline:
+    - step: render
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: configmap
+            base:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: placeholder
+              data:
+                application.properties: ""
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.config
+                toFieldPath: data["application.properties"]
+
+          - name: deployment
+            base:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: placeholder
+              spec:
+                replicas: 1
+                selector:
+                  matchLabels:
+                    app: placeholder
+                template:
+                  metadata:
+                    labels:
+                      app: placeholder
+                  spec:
+                    containers:
+                      - name: container-app
+                        image: pdudits/container-talk-demo:latest
+                        imagePullPolicy: Always
+                        args:
+                          - --deploymentDir
+                          - /opt/payara/deployments
+                          - --contextRoot
+                          - /
+                          - --systemProperties
+                          - /config/application.properties
+                        ports:
+                          - name: http
+                            containerPort: 8080
+                            protocol: TCP
+                        livenessProbe:
+                          httpGet:
+                            path: /health/live
+                            port: http
+                        readinessProbe:
+                          httpGet:
+                            path: /health/ready
+                            port: http
+                        volumeMounts:
+                          - mountPath: /config
+                            name: config
+                        resources:
+                          requests:
+                            cpu: 250m
+                            memory: 256Mi
+                    volumes:
+                      - name: config
+                        configMap:
+                          name: placeholder
+                          items:
+                            - key: application.properties
+                              path: application.properties
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.selector.matchLabels.app
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.template.metadata.labels.app
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.template.spec.volumes[0].configMap.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.contextRoot
+                toFieldPath: spec.template.spec.containers[0].args[3]
+
+          - name: service
+            base:
+              apiVersion: v1
+              kind: Service
+              metadata:
+                name: placeholder
+              spec:
+                type: ClusterIP
+                ports:
+                  - name: http
+                    port: 80
+                    protocol: TCP
+                    targetPort: http
+                selector:
+                  app: placeholder
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.selector.app
+
+          - name: ingress
+            base:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              metadata:
+                name: placeholder
+              spec:
+                ingressClassName: traefik-cloud-head
+                rules:
+                  - host: placeholder.example.com
+                    http:
+                      paths:
+                        - path: /
+                          pathType: Prefix
+                          backend:
+                            service:
+                              name: placeholder
+                              port:
+                                number: 80
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.rules[0].http.paths[0].backend.service.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.hostName
+                toFieldPath: spec.rules[0].host
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.contextRoot
+                toFieldPath: spec.rules[0].http.paths[0].path
+
