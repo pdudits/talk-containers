@@ -1,0 +1,20 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: javaapp-kcl
+spec:
+  compositeTypeRef:
+    apiVersion: payara.cloud/v1kcl
+    kind: JavaApp
+  mode: Pipeline
+  pipeline:
+    - step: render-kcl
+      functionRef:
+        name: crossplane-contrib-function-kcl-fs
+      input:
+        apiVersion: krm.kcl.dev/v1alpha1
+        kind: KCLInput
+        spec:
+          target: Resources
+          source: /templates/javaapp.k
+

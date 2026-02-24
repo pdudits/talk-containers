@@ -1,0 +1,8 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: crossplane-contrib-function-kcl-fs
+spec:
+  package: xpkg.upbound.io/crossplane-contrib/function-kcl:v0.12.0
+  runtimeConfigRef:
+    name: kcl-templates-runtime

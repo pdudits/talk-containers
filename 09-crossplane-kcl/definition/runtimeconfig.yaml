@@ -1,0 +1,20 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: kcl-templates-runtime
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              volumeMounts:
+                - mountPath: /templates
+                  name: templates
+                  readOnly: true
+          volumes:
+            - name: templates
+              configMap:
+                name: kcl-templates

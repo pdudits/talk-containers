@@ -1,0 +1,29 @@
+apiVersion: payara.cloud/v1kcl
+kind: JavaApp
+metadata:
+  name: first-instance
+  namespace: demonstration-crossplane-kcl
+spec:
+  compositionRef:
+    name: containerapp-kcl
+  parameters:
+    hostName: containers-kcl-crossplane.payara.app
+    contextRoot: /
+    config: |-
+      hello.defaultName=firstInstance
+---
+apiVersion: payara.cloud/v1kcl
+kind: JavaApp
+metadata:
+  name: second-instance
+  namespace: demonstration-crossplane-kcl
+spec:
+  compositionRef:
+    name: containerapp-kcl
+  parameters:
+    hostName: containers-kcl-crossplane.payara.app
+    contextRoot: /second
+    downstreamUri: http://first-instance/hello
+    config: |-
+      hello.defaultName=secondInstance
+      hello.downstreamUri=http://first-instance/hello

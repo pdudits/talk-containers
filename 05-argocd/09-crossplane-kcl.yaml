@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 09-crossplane-kcl
+  namespace: argocd
+spec:
+  destination:
+    namespace: demonstration-crossplane-kcl
+    server: https://kubernetes.default.svc
+  project: container-talk
+  source:
+    path: 09-crossplane-kcl
+    repoURL: https://github.com/pdudits/talk-containers
+    targetRevision: main

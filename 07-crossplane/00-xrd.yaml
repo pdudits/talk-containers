@@ -44,3 +44,39 @@ spec:
                     - config
               required:
                 - parameters
+    - name: v1kcl
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                compositionRef:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                parameters:
+                  type: object
+                  properties:
+                    hostName:
+                      type: string
+                      description: Ingress hostname for the application
+                    contextRoot:
+                      type: string
+                      default: /
+                      description: Application context root path
+                    downstreamUri:
+                      type: string
+                      description: Optional downstream service URI for chaining
+                    config:
+                      type: string
+                      description: Application properties content
+                  required:
+                    - hostName
+                    - config
+              required:
+                - parameters
