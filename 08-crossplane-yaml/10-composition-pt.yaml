@@ -48,6 +48,8 @@ spec:
                     app: placeholder
                 template:
                   metadata:
+                    annotations:
+                      some-annotation: a01
                     labels:
                       app: placeholder
                   spec:
