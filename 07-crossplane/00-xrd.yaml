@@ -51,3 +51,9 @@ spec:
                     - config
               required:
                 - parameters
+            status:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: External URL for accessing the application

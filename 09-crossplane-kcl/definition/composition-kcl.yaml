@@ -17,6 +17,6 @@ spec:
         apiVersion: krm.kcl.dev/v1alpha1
         kind: KCLInput
         spec:
-          target: Resources
+          target: Default
           source: /templates/javaapp.k
 

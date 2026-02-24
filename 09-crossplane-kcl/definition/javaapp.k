@@ -1,5 +1,6 @@
 oxr = option("params").oxr
 params = oxr.spec.parameters
+ocds = option("params").ocds
 
 app_name = oxr.metadata.name
 namespace = oxr.metadata.namespace
@@ -158,4 +159,15 @@ ingress = {
   }
 }
 
-items = [configmap, deployment, service, ingress]
+_items_base = [configmap, deployment, service, ingress]
+
+# Patch XR status with URL from Ingress host and context root
+_dxr = {
+  **oxr
+}
+
+# Build URL from ingress rule host and context root path
+_path = context_root if context_root != "/" else ""
+_dxr.status.url = "https://{host}{path}".format(host=host_name, path=_path)
+
+items = _items_base + [_dxr]

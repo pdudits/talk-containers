@@ -1,0 +1,16 @@
+---
+# Argo CD ConfigMap patch to add deep links for JavaApp resources
+# This is applied on top of the Argo CD server installation
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  # Deep link configuration for JavaApp resources
+  # Displays clickable "Open App" link in the Argo CD UI resource view
+  resource.links: |
+    - url: "{{ resource.status.url }}"
+      title: "Open App"
+      if: resource.kind == "JavaApp" && resource.status.url != ""
+      icon.class: "fa-external-link"
