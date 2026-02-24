@@ -8,7 +8,12 @@ spec:
     namespace: demonstration-crossplane-kcl
     server: https://kubernetes.default.svc
   project: container-talk
-  source:
-    path: 09-crossplane-kcl
+  sources:
+  - path: 09-crossplane-kcl
     repoURL: https://github.com/pdudits/talk-containers
     targetRevision: main
+  - path: 09-crossplane-kcl/definition
+    repoURL: https://github.com/pdudits/talk-containers
+    targetRevision: main
+  
+ 
