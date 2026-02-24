@@ -12,3 +12,6 @@ spec:
     path: 08-crossplane-yaml
     repoURL: https://github.com/pdudits/talk-containers
     targetRevision: main
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
