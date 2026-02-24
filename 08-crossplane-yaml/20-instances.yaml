@@ -1,21 +1,27 @@
-apiVersion: payara.cloud/v1yaml
+apiVersion: payara.cloud/v1
 kind: JavaApp
 metadata:
   name: first-instance
   namespace: demonstration-crossplane-yaml
 spec:
+  compositionSelector:
+    matchLabels:
+      crossplane-language: yaml
   parameters:
     hostName: containers-combined-crossplane.payara.app
     contextRoot: /
     config: |-
       hello.defaultName=firstInstance
 ---
-apiVersion: payara.cloud/v1yaml
+apiVersion: payara.cloud/v1
 kind: JavaApp
 metadata:
   name: second-instance
   namespace: demonstration-crossplane-yaml
 spec:
+  compositionSelector:
+    matchLabels:
+      crossplane-language: yaml
   parameters:
     hostName: containers-combined-crossplane.payara.app
     contextRoot: /second

@@ -2,9 +2,11 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: javaapp-kcl
+  labels:
+    crossplane-language: kcl
 spec:
   compositeTypeRef:
-    apiVersion: payara.cloud/v1kcl
+    apiVersion: payara.cloud/v1
     kind: JavaApp
   mode: Pipeline
   pipeline:

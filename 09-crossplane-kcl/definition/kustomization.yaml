@@ -8,7 +8,7 @@ resources:
 
 configMapGenerator:
   - name: kcl-templates
-    namespace: crossplane-system
+    namespace: demonstration-crossplane
     files:
       - javaapp.k=javaapp.k
 
