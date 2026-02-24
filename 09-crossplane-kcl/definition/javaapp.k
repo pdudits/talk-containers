@@ -1,7 +1,7 @@
 oxr = option("params").oxr
 params = oxr.spec.parameters
 
-name = oxr.metadata.name
+app_name = oxr.metadata.name
 namespace = oxr.metadata.namespace
 
 host_name = params.hostName
@@ -13,9 +13,9 @@ configmap = {
   kind: "ConfigMap"
   metadata: {
     annotations: {
-      "crossplane.io/composition-resource-name": "configmap"
+      "krm.kcl.dev/composition-resource-name": "configmap"
     }
-    name: name
+    name: app_name
     namespace: namespace
   }
   data: {
@@ -28,22 +28,22 @@ deployment = {
   kind: "Deployment"
   metadata: {
     annotations: {
-      "crossplane.io/composition-resource-name": "deployment"
+      "krm.kcl.dev/composition-resource-name": "deployment"
     }
-    name: name
+    name: app_name
     namespace: namespace
   }
   spec: {
     replicas: 1
     selector: {
       matchLabels: {
-        app: name
+        app: app_name
       }
     }
     template: {
       metadata: {
         labels: {
-          app: name
+          app: app_name
         }
       }
       spec: {
@@ -90,7 +90,7 @@ deployment = {
         volumes: [{
           name: "config"
           configMap: {
-            name: name
+            name: app_name
             items: [{
               key: "application.properties"
               path: "application.properties"
@@ -107,9 +107,9 @@ service = {
   kind: "Service"
   metadata: {
     annotations: {
-      "crossplane.io/composition-resource-name": "service"
+      "krm.kcl.dev/composition-resource-name": "service"
     }
-    name: name
+    name: app_name
     namespace: namespace
   }
   spec: {
@@ -121,7 +121,7 @@ service = {
       targetPort: "http"
     }]
     selector: {
-      app: name
+      app: app_name
     }
   }
 }
@@ -131,9 +131,9 @@ ingress = {
   kind: "Ingress"
   metadata: {
     annotations: {
-      "crossplane.io/composition-resource-name": "ingress"
+      "krm.kcl.dev/composition-resource-name": "ingress"
     }
-    name: name
+    name: app_name
     namespace: namespace
   }
   spec: {
@@ -146,7 +146,7 @@ ingress = {
           pathType: "Prefix"
           backend: {
             service: {
-              name: name
+              name: app_name
               port: {
                 number: 80
               }
