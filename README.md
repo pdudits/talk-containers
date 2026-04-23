@@ -4,6 +4,8 @@ This repository contains sample code for the talk "It (only) starts with contain
 
 Watch the talk on Yoube: https://youtu.be/q0_KPLHOnCg?si=x_MxcmKbrcsE5eiz
 
+Slides: https://speakerdeck.com/pdudits/it-only-start-with-a-container
+
 **WARNING**: These yaml files are of "works on my cluster" kind. You will need to modify your domain and ingress settings to something that works in your environment.
 
 ## The Application
